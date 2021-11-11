@@ -3,7 +3,7 @@ import uuid
 
 import pika
 
-from src.contracts import Request
+from contracts import Request
 from responseDto import AmqpResponse
 from rabbitConsumer import get_consumer
 

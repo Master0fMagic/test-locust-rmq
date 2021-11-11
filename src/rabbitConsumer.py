@@ -1,6 +1,6 @@
 import time
 from abc import ABC, abstractmethod
-from src.responseDto import AmqpResponse
+from responseDto import AmqpResponse
 from contracts import Response
 
 import pika
