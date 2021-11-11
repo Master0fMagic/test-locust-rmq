@@ -1,7 +1,6 @@
-from rabbitmq import get_client
+from rabbitClient import get_client
 
 from locust import User, task
-
 import time
 
 
@@ -13,4 +12,3 @@ class MyLocust(User):
     def publish(self):
         get_client().publish()
         time.sleep(1)
-
