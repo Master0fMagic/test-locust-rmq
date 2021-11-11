@@ -7,7 +7,12 @@ from rabbitConsumer import get_consumer
 def setup():
     get_client()
     consumer = get_consumer()
-    consumer.start_listening()
+    consumer.start_listening(rk='r.response', queue='q.response.test', exchange='e.general')
+
+
+def clear():
+    get_consumer().close()
+    get_client().disconnect()
 
 
 def main():
@@ -19,5 +24,13 @@ def main():
     env.runner.start(1, 1)
 
 
+def clear():
+    get_consumer().close()
+    get_client().disconnect()
+
+
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    finally:
+        clear()

@@ -15,7 +15,7 @@ class RmqUser(User):
 
 
 def on_response(response, completion_time):
-    if response.Error and response.Error != Error:
+    if response.Error == Error():
         print(f'Success response: {response}')
         events.request.fire(response_time=completion_time, exception=Exception())
     else:
