@@ -3,6 +3,8 @@ from contracts import Error
 from rabbitClient import get_client
 from random import random
 
+from locust import events
+
 
 def main():
     client = get_client()
@@ -14,12 +16,15 @@ def main():
 def on_response(response, completion_time):
     if response.Error and response.Error != Error:
         print(f'Success response: {response}')
+        # events.request.fire(response_time=completion_time, exception=Exception())
     else:
         print(f'Response with error: {response}')
+        # events.request.fire(response_time=completion_time, response=response)
     print(f'Response completed in {completion_time} ms')
 
 
 def on_timeout(request_id):
+    # events.request.fire(exception=Exception())
     print(f'timeout for request: {request_id}')
 
 

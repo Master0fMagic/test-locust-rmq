@@ -84,7 +84,7 @@ class AmqpConsumer(BaseAmqpConsumer):
         try:
             for key in self._response_dict.keys():
                 response: AmqpResponse = self._response_dict.get(key)
-                if response.expire_at <= datetime.datetime.now().second * 1000:
+                if response.expire_at <= int(time.time() * 1000):
                     keys_to_delete.append(response)
         except RuntimeError as e:
             pass
