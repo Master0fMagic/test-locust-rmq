@@ -40,7 +40,4 @@ def on_timeout(request_id):
 
 
 if __name__ == '__main__':
-    try:
-        main()
-    except KeyboardInterrupt:
-        clear()
+    main()

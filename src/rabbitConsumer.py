@@ -29,21 +29,22 @@ class AmqpConsumer(BaseAmqpConsumer):
     def _callback(self, channel, method, properties, body):
         self._proto_response.ParseFromString(body)
         # add message logging
-        if self._proto_response.id not in self._response_dict:
+        response = next(r for r in self._responses if r.is_expected_response(self._proto_response))
+        if not response:
             return
-        amqp_response: AmqpResponse = self._response_dict.pop(self._proto_response.id)
-        amqp_response.complete(response_data=self._proto_response)
+        self._responses.remove(response)
+        response.complete(response_data=self._proto_response)
 
     def start_listening(self, rk: str, queue: str, exchange: str):
         if self._is_listening:
             return
 
         self._thread = threading.Thread(target=self._start, args=[rk, queue, exchange])
-        # self._thread.daemon = True
+        self._thread.daemon = True
         self._thread.start()
 
         self._expire_thread = threading.Thread(target=self._check_expire())
-        # self._expire_thread.daemon = True
+        self._expire_thread.daemon = True
         self._expire_thread.start()
 
         self._is_listening = True
@@ -61,37 +62,37 @@ class AmqpConsumer(BaseAmqpConsumer):
         self._channel.start_consuming()
 
     def __init__(self, proto_response):
-        self._response_dict = dict()
+        self._responses: list[AmqpResponse] = list()
         self._is_listening = False
         self._proto_response = proto_response
 
     def register_request(self, response: AmqpResponse):
-        if response.request_id in self._response_dict:
-            return
-
-        self._response_dict[response.request_id] = response
+        self._responses.append(response)
 
     def close(self):
-        self._channel.stop_consuming()
-        self._channel.close()
-        self._connection.close()
-        self._thread.join(timeout=1)
-        self._expire_thread.join(timeout=1)
+        logging.warning('Closing consumer')
+        if self._channel:
+            self._channel.stop_consuming()
+            self._channel.close()
+        if self._connection:
+            self._connection.close()
+        if self._thread:
+            self._thread.join(timeout=1)
+        if self._expire_thread:
+            self._expire_thread.join(timeout=1)
 
     def _check_expire(self):
         time.sleep(10)
-        keys_to_delete = []
         try:
-            for key in self._response_dict.keys():
-                response: AmqpResponse = self._response_dict.get(key)
-                if response.expire_at <= int(time.time() * 1000):
-                    keys_to_delete.append(response)
+            objects_to_delete = [r for r in self._responses if r.is_expired()]
+            for obj_to_delete in objects_to_delete:
+                self._responses.remove(obj_to_delete)
+                obj_to_delete.complete_timeout()
         except RuntimeError as e:
             logging.error(f'Caught error: {e}')
 
-        for key in keys_to_delete:
-            response: AmqpResponse = self._response_dict.pop(key)
-            response.complete_timeout()
+    def __del__(self):
+        self.close()
 
 
 consumer = None

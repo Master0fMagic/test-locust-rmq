@@ -1,3 +1,4 @@
+import logging
 import time
 import uuid
 
@@ -31,11 +32,14 @@ class RabbitMQClient(object):
                                     body=request.SerializeToString())
 
     def disconnect(self):
+        logging.warning('Disconnecting rmq client')
         if self._channel is not None:
             self._channel.close()
         if self._connection is not None:
             self._connection.close()
-        get_consumer().close()
+
+    def __del__(self):
+        self.disconnect()
 
 
 client = None
