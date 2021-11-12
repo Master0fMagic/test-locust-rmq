@@ -30,10 +30,10 @@ def main():
     global env
     env = Environment(locustfile='locustfile.py')
     env.create_local_runner()
-    env.create_web_ui('localhost', 8089)
-
-    gevent.spawn(stats_printer(env.stats))
-    gevent.spawn(stats_history, env.runner)
+    # env.create_web_ui('localhost', 8089)
+    #
+    # gevent.spawn(stats_printer(env.stats))
+    # gevent.spawn(stats_history, env.runner)
 
     env.runner.start(1, 1)
 
