@@ -30,7 +30,7 @@ def main():
     setup()
     logging.warning('Setup ended')
     global env
-    env = Environment()
+    env = Environment(user_classes=[RmqUser])
     env.create_local_runner()
     env.create_web_ui('localhost', 8089)
 
