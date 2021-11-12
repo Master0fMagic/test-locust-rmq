@@ -29,7 +29,6 @@ def main():
     env = Environment(user_classes=[RmqUser])
     env.create_local_runner()
     env.create_web_ui('localhost', 8089)
-    env.web_ui.greenlet.join()
 
     gevent.spawn(stats_printer(env.stats))
     gevent.spawn(stats_history, env.runner)
@@ -47,4 +46,3 @@ if __name__ == '__main__':
         main()
     finally:
         clear()
-
