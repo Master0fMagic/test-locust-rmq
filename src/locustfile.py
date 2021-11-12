@@ -5,8 +5,7 @@ from error import TimeoutException, ResponseException
 
 
 class RmqUser(User):
-    min_wait = 1000
-    max_wait = 1000
+    wait_time = 1
 
     @task
     def publish(self):
