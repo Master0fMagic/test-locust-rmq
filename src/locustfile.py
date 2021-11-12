@@ -7,7 +7,7 @@ from error import TimeoutException, ResponseException
 
 
 class RmqUser(User):
-    wait_time = constant(0.9)
+    wait_time = constant(1)
 
     @task
     def publish(self):

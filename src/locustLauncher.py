@@ -1,6 +1,5 @@
 import gevent
 import logging
-import subprocess
 from locust.env import Environment
 from locust.stats import stats_printer, stats_history
 from locust import events
@@ -22,10 +21,6 @@ def clear():
     get_consumer().close()
     get_client().disconnect()
 
-    # global env
-    # env.runner.greenlet.join()
-    # env.web_ui.stop()
-
 
 def main():
     setup()
@@ -40,8 +35,7 @@ def main():
 
     env.runner.start(1, 1)
     env.runner.greenlet.join()
-    env.web_ui.greenlet.join()
-    # subprocess.run(['locust'])
+    env.web_ui.stop()
 
 
 def clear():
