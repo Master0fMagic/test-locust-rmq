@@ -3,3 +3,4 @@ google~=3.0.0
 protobuf==3.19.1
 uuid==1.30
 locust==2.5.0
+gevent~=21.8.0
