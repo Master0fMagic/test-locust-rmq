@@ -1,11 +1,11 @@
 from rabbitClient import get_client
-from locust import User, task, events
+from locust import User, task, events, constant
 from contracts import Error
 from error import TimeoutException, ResponseException
 
 
 class RmqUser(User):
-    wait_time = 1
+    wait_time = constant(1)
 
     @task
     def publish(self):
