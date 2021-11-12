@@ -38,8 +38,8 @@ def main():
     gevent.spawn(stats_history, env.runner)
 
     env.runner.start(1, 1)
-    # env.runner.greenlet.join()
-    # env.web_ui.greenlet.join()
+    env.runner.greenlet.join()
+    env.web_ui.greenlet.join()
     # subprocess.run(['locust'])
 
 
