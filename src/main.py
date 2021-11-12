@@ -1,3 +1,4 @@
+import logging
 from contracts import Error
 
 from rabbitClient import get_client
@@ -6,6 +7,7 @@ from random import random
 
 
 def setup():
+    logging.basicConfig(format='%(levelname) -s at %(asctime) -s: %(message)s', level=logging.INFO)
     get_client()
     consumer = get_consumer()
     consumer.start_listening(rk='r.response', queue='q.response.test', exchange='e.general')

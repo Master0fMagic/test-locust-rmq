@@ -1,10 +1,10 @@
 import time
+import logging
+import pika
+import threading
 from abc import ABC, abstractmethod
 from responseDto import AmqpResponse
 from contracts import Response
-
-import pika
-import threading
 
 
 class BaseAmqpConsumer(ABC):
@@ -87,8 +87,7 @@ class AmqpConsumer(BaseAmqpConsumer):
                 if response.expire_at <= int(time.time() * 1000):
                     keys_to_delete.append(response)
         except RuntimeError as e:
-            pass
-            # todo add logging
+            logging.error(f'Caught error: {e}')
 
         for key in keys_to_delete:
             response: AmqpResponse = self._response_dict.pop(key)

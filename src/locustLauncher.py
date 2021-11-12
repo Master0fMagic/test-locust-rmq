@@ -1,4 +1,5 @@
 import gevent
+import logging
 from locust.env import Environment
 from locust.stats import stats_printer, stats_history
 from locustfile import RmqUser
@@ -9,6 +10,7 @@ env: Environment = None
 
 
 def setup():
+    logging.basicConfig(format='%(levelname) -s at %(asctime) -s: %(message)s', level=logging.INFO)
     get_client()
     consumer = get_consumer()
     consumer.start_listening(rk='r.response', queue='q.response.test', exchange='e.general')
@@ -18,9 +20,9 @@ def clear():
     get_consumer().close()
     get_client().disconnect()
 
-    global env
-    env.runner.greenlet.join()
-    env.web_ui.stop()
+    # global env
+    # env.runner.greenlet.join()
+    # env.web_ui.stop()
 
 
 def main():
