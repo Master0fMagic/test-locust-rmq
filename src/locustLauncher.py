@@ -28,6 +28,7 @@ def clear():
 
 def main():
     setup()
+    logging.warning('Setup ended')
     # global env
     # env = Environment()
     # env.create_local_runner()
