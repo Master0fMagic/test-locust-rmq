@@ -28,7 +28,7 @@ def clear():
 def main():
     setup()
     global env
-    env = Environment(user_classes=[RmqUser])
+    env = Environment(locustfile='locustfile.py')
     env.create_local_runner()
     env.create_web_ui('localhost', 8089)
 
