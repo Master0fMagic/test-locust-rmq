@@ -20,9 +20,9 @@ def clear():
     get_consumer().close()
     get_client().disconnect()
 
-    # global env
-    # env.runner.greenlet.join()
-    # env.web_ui.stop()
+    global env
+    env.runner.greenlet.join()
+    env.web_ui.stop()
 
 
 def main():
@@ -32,8 +32,8 @@ def main():
     env.create_local_runner()
     env.create_web_ui('localhost', 8089)
 
-    # gevent.spawn(stats_printer(env.stats))
-    # gevent.spawn(stats_history, env.runner)
+    gevent.spawn(stats_printer(env.stats))
+    gevent.spawn(stats_history, env.runner)
 
     env.runner.start(1, 1)
 
