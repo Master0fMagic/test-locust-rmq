@@ -1,5 +1,6 @@
 import gevent
 import logging
+import subprocess
 from locust.env import Environment
 from locust.stats import stats_printer, stats_history
 from locustfile import RmqUser
@@ -27,15 +28,16 @@ def clear():
 
 def main():
     setup()
-    global env
-    env = Environment(locustfile='locustfile.py')
-    env.create_local_runner()
+    # global env
+    # env = Environment()
+    # env.create_local_runner()
     # env.create_web_ui('localhost', 8089)
     #
     # gevent.spawn(stats_printer(env.stats))
     # gevent.spawn(stats_history, env.runner)
 
-    env.runner.start(1, 1)
+    # env.runner.start(1, 1)
+    subprocess.run(['locust'])
 
 
 def clear():

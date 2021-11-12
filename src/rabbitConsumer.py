@@ -40,11 +40,11 @@ class AmqpConsumer(BaseAmqpConsumer):
             return
 
         self._thread = threading.Thread(target=self._start, args=[rk, queue, exchange])
-        # self._thread.daemon = True
+        self._thread.daemon = True
         self._thread.start()
 
         self._expire_thread = threading.Thread(target=self._check_expire())
-        # self._expire_thread.daemon = True
+        self._expire_thread.daemon = True
         self._expire_thread.start()
 
         self._is_listening = True
