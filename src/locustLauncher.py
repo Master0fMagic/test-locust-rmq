@@ -31,11 +31,9 @@ def main():
     setup()
     logging.warning('Setup ended')
     global env
-    env = Environment(user_classes=[RmqUser])
+    env = Environment(user_classes=[RmqUser], events=events)
     env.create_local_runner()
-    env.create_web_ui('localhost', 8089,)
-
-    events.request.add_listener(env.runner)
+    env.create_web_ui('localhost', 8089)
 
     gevent.spawn(stats_printer(env.stats))
     gevent.spawn(stats_history, env.runner)
