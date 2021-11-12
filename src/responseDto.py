@@ -14,7 +14,7 @@ class AmqpResponse:
         self._on_response_callback = on_response_callback
         self._on_timeout_callback = on_timeout_callback
         self._send_at = send_at
-        self._expire_at = send_at + 30_000
+        self._expire_at = send_at + 120_000
         if check_function:
             self._check_function = check_function
         else:

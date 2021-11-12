@@ -43,7 +43,7 @@ class AmqpConsumer(BaseAmqpConsumer):
         self._thread.daemon = True
         self._thread.start()
 
-        self._expire_thread = threading.Thread(target=self._check_expire())
+        self._expire_thread = threading.Thread(target=self._check_expire)
         self._expire_thread.daemon = True
         self._expire_thread.start()
 
@@ -82,14 +82,15 @@ class AmqpConsumer(BaseAmqpConsumer):
             self._expire_thread.join(timeout=1)
 
     def _check_expire(self):
-        time.sleep(10)
-        try:
-            objects_to_delete = [r for r in self._responses if r.is_expired()]
-            for obj_to_delete in objects_to_delete:
-                self._responses.remove(obj_to_delete)
-                obj_to_delete.complete_timeout()
-        except RuntimeError as e:
-            logging.error(f'Caught error: {e}')
+        while True:
+            time.sleep(5)
+            try:
+                objects_to_delete = [r for r in self._responses if r.is_expired()]
+                for obj_to_delete in objects_to_delete:
+                    self._responses.remove(obj_to_delete)
+                    obj_to_delete.complete_timeout()
+            except RuntimeError as e:
+                logging.error(f'Caught error: {e}')
 
     def __del__(self):
         self.close()

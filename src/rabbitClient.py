@@ -27,7 +27,7 @@ class RabbitMQClient(object):
         consumer.start_listening(rk='r.response', queue='q.response.test', exchange='e.general')
         consumer.register_request(response_dto)
 
-        print(f'Sending request: {request}')
+        logging.info(f'Sending request: {request}')
         self._channel.basic_publish(exchange='e.general', routing_key='r.request.test',
                                     body=request.SerializeToString())
 

@@ -1,4 +1,6 @@
 import logging
+import time
+
 from contracts import Error
 
 from rabbitClient import get_client
@@ -25,18 +27,19 @@ def main():
     for _ in range(10):
         rmq_client.send_for_response(f'Hello world, {random()} try',
                                      on_response, on_timeout)
+        time.sleep(4)
 
 
 def on_response(response, completion_time):
     if response.Error == Error():
-        print(f'Success response: {response}')
+        logging.info(f'Success response: {response}')
     else:
-        print(f'Response with error: {response}')
-    print(f'Response completed in {completion_time} ms')
+        logging.info(f'Response with error: {response}')
+    logging.info(f'Response completed in {completion_time} ms')
 
 
 def on_timeout(request_id):
-    print(f'timeout for request: {request_id}')
+    logging.info(f'timeout for request: {request_id}')
 
 
 if __name__ == '__main__':
