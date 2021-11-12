@@ -3,6 +3,7 @@ import logging
 import subprocess
 from locust.env import Environment
 from locust.stats import stats_printer, stats_history
+from locust import events
 from locustfile import RmqUser
 from rabbitClient import get_client
 from rabbitConsumer import get_consumer
@@ -34,7 +35,9 @@ def main():
     env.create_local_runner()
     env.create_web_ui('localhost', 8089,)
 
-    gevent.spawn(stats_printer(env.runner.stats))
+    events.request.add_listener(env.runner)
+
+    gevent.spawn(stats_printer(env.stats))
     gevent.spawn(stats_history, env.runner)
 
     env.runner.start(1, 1)
