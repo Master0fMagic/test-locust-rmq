@@ -29,16 +29,18 @@ def clear():
 def main():
     setup()
     logging.warning('Setup ended')
-    # global env
-    # env = Environment()
-    # env.create_local_runner()
-    # env.create_web_ui('localhost', 8089)
-    #
-    # gevent.spawn(stats_printer(env.stats))
-    # gevent.spawn(stats_history, env.runner)
+    global env
+    env = Environment()
+    env.create_local_runner()
+    env.create_web_ui('localhost', 8089)
 
-    # env.runner.start(1, 1)
-    subprocess.run(['locust'])
+    gevent.spawn(stats_printer(env.stats))
+    gevent.spawn(stats_history, env.runner)
+
+    env.runner.start(1, 1)
+    env.runner.greenlet.join()
+    env.web_ui.greenlet.join()
+    # subprocess.run(['locust'])
 
 
 def clear():
