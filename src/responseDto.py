@@ -1,4 +1,3 @@
-# import configs for timeout
 import time
 
 
@@ -7,14 +6,16 @@ class AmqpResponse:
     on_timeout_callback - function(request_idL str),
     send_at - timestamp (millis) where request was send,
     response - proto object for parsing body,
+    timeout - timeout from rbq in ms
     check_function - function(response) -> bool: uses for check if caught message is expected for response"""
 
-    def __init__(self, request_id: str, on_response_callback, on_timeout_callback, send_at: int, check_function=None):
+    def __init__(self, request_id: str, on_response_callback, on_timeout_callback, send_at: int, timeout: int,
+                 check_function=None):
         self._request_id = request_id
         self._on_response_callback = on_response_callback
         self._on_timeout_callback = on_timeout_callback
         self._send_at = send_at
-        self._expire_at = send_at + 120_000
+        self._expire_at = send_at + timeout
         if check_function:
             self._check_function = check_function
         else:
