@@ -16,14 +16,18 @@ class Config:
             raise FileNotFoundError('Cant find config file')
         config.read(CONFIG_FILE)
 
-        self._rabbit_response_timeout = int(config[RABBIT_MQ_SECTION]['response_timeout'])
-        self._rabbit_host = config[RABBIT_MQ_SECTION]['host']
-        self._rabbit_port = int(config[RABBIT_MQ_SECTION]['port'])
+        try:
+            self._rabbit_response_timeout = int(config[RABBIT_MQ_SECTION]['response_timeout'])
+            self._rabbit_host = config[RABBIT_MQ_SECTION]['host']
+            self._rabbit_port = int(config[RABBIT_MQ_SECTION]['port'])
 
-        self._user_rate = float(config[TEST_SECTION]['user_rate'])
-        self._max_users = int(config[TEST_SECTION]['max_users'])
-        self._test_duration = int(config[TEST_SECTION]['test_duration']) \
-            if int(config[TEST_SECTION]['test_duration']) and int(config[TEST_SECTION]['test_duration']) > 0 else None
+            self._user_rate = float(config[TEST_SECTION]['user_rate'])
+            self._max_users = int(config[TEST_SECTION]['max_users'])
+            self._test_duration = int(config[TEST_SECTION]['test_duration']) \
+                if config[TEST_SECTION]['test_duration'] and int(
+                config[TEST_SECTION]['test_duration']) > 0 else None
+        except KeyError as e:
+            raise KeyError(f'Can`t find property: {str(e)} in config file')
 
     @property
     def rabbit_response_timeout(self):
