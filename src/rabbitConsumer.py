@@ -5,6 +5,7 @@ import threading
 from abc import ABC, abstractmethod
 from responseDto import AmqpResponse
 from contracts import Response
+from config import get_config
 
 
 class BaseAmqpConsumer(ABC):
@@ -50,8 +51,8 @@ class AmqpConsumer(BaseAmqpConsumer):
         self._is_listening = True
 
     def _start(self, rk: str, queue: str, exchange: str):
-        self._connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.0.108',
-                                                                             port=5672))
+        self._connection = pika.BlockingConnection(pika.ConnectionParameters(host=get_config().rabbit_host,
+                                                                             port=get_config().rabbit_port))
         self._channel = self._connection.channel()
 
         self._channel.queue_declare(queue, auto_delete=True)

@@ -38,4 +38,4 @@ def fire_success(completion_time, response):
 
 def fire_error(completion_time, response, exception: BaseException):
     events.request.fire(request_type=REQUEST_TYPE, name='Local docker RabbitMQ instance', response_time=completion_time,
-                        response_length=0, response=response, context=None, exception=BaseException)
+                        response_length=0, response=response, context=None, exception=exception)

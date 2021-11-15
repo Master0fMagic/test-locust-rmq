@@ -1,11 +1,13 @@
 import gevent
 import logging
+import constant
 from locust.env import Environment
 from locust.stats import stats_printer, stats_history
 from locust import events
 from locustfile import RmqUser
 from rabbitClient import get_client
 from rabbitConsumer import get_consumer
+from config import get_config
 
 env: Environment = None
 
@@ -14,7 +16,8 @@ def setup():
     logging.basicConfig(format='%(levelname) -s at %(asctime) -s: %(message)s', level=logging.INFO)
     get_client()
     consumer = get_consumer()
-    consumer.start_listening(rk='r.response', queue='q.response.test', exchange='e.general')
+    consumer.start_listening(rk=constant.RESPONSE_ROUTING_KEY, queue=constant.RESPONSE_QUEUE,
+                             exchange=constant.EXCHANGE)
 
 
 def clear():
@@ -33,14 +36,13 @@ def main():
     gevent.spawn(stats_printer(env.stats))
     gevent.spawn(stats_history, env.runner)
 
-    env.runner.start(1, 1)
+    env.runner.start(user_count=get_config().max_users, spawn_rate=get_config().user_rate)
+
+    if get_config().test_duration:
+        gevent.spawn_later(get_config().test_duration, lambda: env.runner.quit())
+
     env.runner.greenlet.join()
     env.web_ui.stop()
-
-
-def clear():
-    get_consumer().close()
-    get_client().disconnect()
 
 
 if __name__ == '__main__':

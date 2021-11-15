@@ -23,7 +23,7 @@ class Config:
         self._user_rate = float(config[TEST_SECTION]['user_rate'])
         self._max_users = int(config[TEST_SECTION]['max_users'])
         self._test_duration = int(config[TEST_SECTION]['test_duration']) \
-            if int(config[TEST_SECTION]['test_duration']) else -1
+            if int(config[TEST_SECTION]['test_duration']) and int(config[TEST_SECTION]['test_duration']) > 0 else None
 
     @property
     def rabbit_response_timeout(self):
