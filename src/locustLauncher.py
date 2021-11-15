@@ -13,6 +13,7 @@ env: Environment = None
 
 
 def setup():
+    get_config()
     logging.basicConfig(format='%(levelname) -s at %(asctime) -s: %(message)s', level=logging.INFO)
     get_client()
     consumer = get_consumer()
